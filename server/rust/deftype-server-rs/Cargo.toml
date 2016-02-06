@@ -1,0 +1,11 @@
+[package]
+authors = ["itang <live.tang@gmail.com>"]
+name = "deftype-server-rs"
+version = "0.1.0"
+
+[dependencies]
+ansi_term = "0.7.1"
+clippy = "0.0.37"
+iron = "0.2.6"
+router = "0.1.0"
+time = "0.1.34"
