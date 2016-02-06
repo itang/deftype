@@ -5,7 +5,13 @@ version = "0.1.0"
 
 [dependencies]
 ansi_term = "0.7.1"
+chrono = "0.2.19"
 clippy = "0.0.37"
+hyper = "0.7.2"
 iron = "0.2.6"
+lazy_static = "0.1.15"
+mount = "0.0.9"
 router = "0.1.0"
+rustc-serialize = "0.3.16"
+staticfile = "0.1.0"
 time = "0.1.34"

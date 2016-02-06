@@ -1,3 +1,4 @@
+// extern crate hyper;
 extern crate iron;
 extern crate router;
 extern crate time;
@@ -5,8 +6,15 @@ extern crate time;
 use iron::prelude::*;
 use iron::{BeforeMiddleware, AfterMiddleware, typemap};
 use iron::status;
+// use iron::mime::Mime;
 use router::NoRoute;
 use self::time::precise_time_ns; // why need self::??
+
+/// ////////////////////////////////////////////////////////////
+// from hyper.
+header! {
+    (XRuntime, "X-Runtime") => [String]
+}
 
 pub struct Runtime;
 
@@ -22,9 +30,12 @@ impl BeforeMiddleware for Runtime {
 }
 
 impl AfterMiddleware for Runtime {
-    fn after(&self, req: &mut Request, res: Response) -> IronResult<Response> {
+    fn after(&self, req: &mut Request, mut res: Response) -> IronResult<Response> {
         let delta = precise_time_ns() - *req.extensions.get::<Runtime>().unwrap();
-        println!("Request took: {} ms", (delta as f64) / 1000000.0);
+
+        let xrstr = format!("{} ms", (delta as f64) / 1000000.0);
+        // println!("Request took: {}", xrstr);
+        res.headers.set(XRuntime(xrstr));
 
         Ok(res)
     }

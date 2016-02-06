@@ -7,9 +7,14 @@ cargo new --bin deftype-server-rs
 
 cd deftype-server-rs
 
+cargo add clippy
+
+cargo add hyper
 cargo add iron
 cargo add router
-cargo add clippy
-cargo add time
+cargo add mount
+cargo add staticfile
 
+cargo add time
+cargo add chrono
 ```

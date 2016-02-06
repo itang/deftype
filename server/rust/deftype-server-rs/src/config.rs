@@ -5,13 +5,15 @@ use std::env;
 pub struct ServerConfig {
     pub host: String,
     pub port: u16,
+    pub root_dir: String,
 }
 
 impl ServerConfig {
-    pub fn new(host: &str, port: u16) -> Self {
+    fn new(host: String, port: u16, root_dir: String) -> Self {
         ServerConfig {
-            host: host.to_owned(),
+            host: host,
             port: port,
+            root_dir: root_dir,
         }
     }
 
@@ -19,10 +21,11 @@ impl ServerConfig {
         let d = Self::default();
         let default_port = d.port; // just copy. happy for capture of partially moved value: `d`
         let host = env::var("HOST").unwrap_or(d.host);
+        let root_dir = env::var("ROOT_DIR").unwrap_or(d.root_dir);
         let port = env::var("PORT")
                        .map(|p| p.parse::<u16>().unwrap_or(default_port))
                        .unwrap_or(default_port);
-        Self::new(&host, port)
+        Self::new(host, port, root_dir)
     }
 
     pub fn to_addr(&self) -> (&str, u16) {
@@ -32,7 +35,7 @@ impl ServerConfig {
 
 impl Default for ServerConfig {
     fn default() -> ServerConfig {
-        Self::new("localhost", 3000)
+        Self::new("localhost".to_owned(), 3000, "public/".to_owned())
     }
 }
 
