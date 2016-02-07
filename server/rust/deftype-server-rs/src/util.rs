@@ -26,15 +26,11 @@ macro_rules! error {
     });
 }
 
-
-// protected boolean isAjaxRequest() {
-// return Objects.equals("XMLHttpRequest", getRequest().getHeader("X-Requested-With"));
-// }
-//
 header! { (XMLHttpRequest, "X-Requested-With") => [String] }
 
 header! { (XRuntime, "X-Runtime") => [String] }
 
+#[allow(dead_code)]
 pub fn is_ajax_request(req: &Request) -> bool {
     req.headers.has::<XMLHttpRequest>()
 }
