@@ -16,3 +16,29 @@ namespace :dev do
     end
   end
 end
+
+namespace :source do
+  desc 'check'
+  task :check do
+    sh 'cargo clippy'
+  end
+end
+
+namespace :run do
+  desc 'dev'
+  task :dev do
+    fork do
+      sleep(2)
+      sh 'xdg-open http://localhost:3000 > /dev/null'
+    end
+    sh 'cargo run'
+  end
+  task :prod do
+    sh 'RUN_MODE=production cargo run --release'
+  end
+end
+
+desc 'clean'
+task :clean do
+  sh 'cargo clean'
+end

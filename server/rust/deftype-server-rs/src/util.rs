@@ -76,6 +76,13 @@ pub fn json<T: Encodable>(value: &T) -> IronResult<Response> {
     Ok(Response::with((content_type, status::Ok, s)))
 }
 
+pub fn json_box<T: ?Sized + Encodable>(value: &Box<T>) -> IronResult<Response> {
+    let content_type = "application/json; charset=utf-8".parse::<Mime>().unwrap();
+    let s = try!(json::encode(value).map_err(|err| CustomEncoderError { cause: err }));
+
+    Ok(Response::with((content_type, status::Ok, s)))
+}
+
 pub struct MyStatic(pub Static);
 
 impl Handler for MyStatic {
@@ -102,5 +109,7 @@ impl fmt::Display for MockError {
 }
 
 impl Error for MockError {
-    fn description(&self) -> &str { "Mock Error" }
+    fn description(&self) -> &str {
+        "Mock Error"
+    }
 }

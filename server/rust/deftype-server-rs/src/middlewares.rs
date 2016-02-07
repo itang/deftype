@@ -42,8 +42,8 @@ impl AfterMiddleware for ErrorsHandler {
             // TODO: custom 400 page.
             Ok(Response::with((status::NotFound, "Not Found")))
         } else {
-            //Err(err)
-            //TODO: custom 500 page.
+            // Err(err)
+            // TODO: custom 500 page.
             Ok(Response::with((status::InternalServerError, "500")))
         }
     }

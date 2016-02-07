@@ -3,6 +3,9 @@ var api = (function(){
         server: {
             time: function(){
                 return $.getJSON("/api/server/time");
+            },
+            mode: function(){
+                return $.getJSON("/api/server/mode");
             }
         }
     };
@@ -20,4 +23,10 @@ $(function(){
    }
 
    setInterval(load_server_time, 1000);
+
+   api.server.mode().done(function(ret){
+      if(ret== "development"){
+        $("#dev").load("/dev/1.html").show();
+      }
+   });
 });
