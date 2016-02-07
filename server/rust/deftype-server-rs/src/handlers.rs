@@ -1,16 +1,10 @@
-extern crate rustc_serialize;
-extern crate iron;
-extern crate chrono;
-
-
 use std::convert::From;
-
 use rustc_serialize::Encodable;
 use rustc_serialize::json::{self, EncoderError};
 use iron::prelude::*;
 use iron::status;
 use iron::mime::Mime;
-use self::chrono::*;
+use chrono::*;
 
 
 pub fn welcome(_: &mut Request) -> IronResult<Response> {

@@ -1,20 +1,11 @@
-// extern crate hyper;
-extern crate iron;
-extern crate router;
-extern crate time;
-
 use iron::prelude::*;
 use iron::{BeforeMiddleware, AfterMiddleware, typemap};
 use iron::status;
-// use iron::mime::Mime;
 use router::NoRoute;
-use self::time::precise_time_ns; // why need self::??
+use time::precise_time_ns;
 
-/// ////////////////////////////////////////////////////////////
-// from hyper.
-header! {
-    (XRuntime, "X-Runtime") => [String]
-}
+use util::*;
+
 
 pub struct Runtime;
 
@@ -24,6 +15,7 @@ impl typemap::Key for Runtime {
 
 impl BeforeMiddleware for Runtime {
     fn before(&self, req: &mut Request) -> IronResult<()> {
+        // info!("req {} is ajax request:{}", req.url, is_ajax_request(req));
         req.extensions.insert::<Runtime>(precise_time_ns());
         Ok(())
     }
@@ -47,6 +39,7 @@ pub struct ErrorsHandler;
 impl AfterMiddleware for ErrorsHandler {
     fn catch(&self, _: &mut Request, err: IronError) -> IronResult<Response> {
         if let Some(_) = err.error.downcast::<NoRoute>() {
+            // 404
             Ok(Response::with((status::NotFound, "NoFound")))
         } else {
             // TODO: more
