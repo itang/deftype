@@ -99,6 +99,11 @@ impl Default for ServerConfig {
 
 impl fmt::Display for ServerConfig {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ServerConfig(host:{} , port: {})", self.host, self.port)
+        write!(f,
+               "ServerConfig(host:{} , port: {}, root_dir:{}, run_mode: {})",
+               self.host,
+               self.port,
+               self.root_dir,
+               self.run_mode)
     }
 }
