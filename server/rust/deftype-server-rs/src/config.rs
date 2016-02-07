@@ -2,22 +2,20 @@ use std::fmt;
 use std::env;
 use std::str::FromStr;
 
+
+static DEVELOPMENT: &'static str = "development";
+static PRODUCTION: &'static str = "production";
+
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub enum RunMode {
     Development,
     Production,
 }
 
-pub struct RunModeParseError;
-
-static DEVELOPMENT: &'static str = "development";
-static PRODUCTION: &'static str = "production";
-
 impl RunMode {
     pub fn is_dev(&self) -> bool {
         *self == RunMode::Development
     }
-
 
     #[allow(dead_code)]
     pub fn is_prod(&self) -> bool {
@@ -38,6 +36,7 @@ impl fmt::Display for RunMode {
     }
 }
 
+pub struct RunModeParseError;
 
 impl FromStr for RunMode {
     type Err = RunModeParseError;
@@ -68,7 +67,7 @@ impl ServerConfig {
         }
     }
 
-    pub fn load_from_env() -> ServerConfig {
+    pub fn load_from_env() -> Self {
         let d = Self::default();
         let default_port = d.port; // just copy. happy for capture of partially moved value: `d`
         let default_run_mode = d.run_mode;
