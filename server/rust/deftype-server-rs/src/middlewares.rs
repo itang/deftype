@@ -39,11 +39,12 @@ pub struct ErrorsHandler;
 impl AfterMiddleware for ErrorsHandler {
     fn catch(&self, _: &mut Request, err: IronError) -> IronResult<Response> {
         if let Some(_) = err.error.downcast::<NoRoute>() {
-            // 404
-            Ok(Response::with((status::NotFound, "NoFound")))
+            // TODO: custom 505 page.
+            Ok(Response::with((status::NotFound, "Not Found")))
         } else {
-            // TODO: more
-            Err(err)
+            //Err(err)
+            //TODO: custom 505 page.
+            Ok(Response::with((status::InternalServerError, "500")))
         }
     }
 }

@@ -2,9 +2,17 @@ task :default do
   sh 'rake -T'
 end
 
-
 desc 'fmt'
 task :fmt do
   sh 'cargo fmt'
   sh 'rm src/*.bk'
+end
+
+namespace :dev do
+  namespace :mock do
+    desc 'error'
+    task :error do
+      sh 'http ":3000/_dev/mock/error"'
+    end
+  end
 end
