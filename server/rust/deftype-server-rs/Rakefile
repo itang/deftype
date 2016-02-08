@@ -32,6 +32,18 @@ namespace :dev do
       sh 'http ":3000/_dev/mock/error"'
     end
   end
+
+  desc 'cloc'
+  task :cloc do
+    file = 'cloc_history.log.md'
+
+    sh "date >> #{file}"
+    sh "echo '' >> #{file}"
+    sh "echo '```' >> #{file}"
+    sh "cloc . >> #{file}"
+    sh "echo '```' >> #{file}"
+    sh "echo '' >> #{file}"
+  end
 end
 
 namespace :db do
