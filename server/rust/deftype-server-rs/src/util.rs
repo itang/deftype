@@ -56,12 +56,12 @@ macro_rules! info {
 macro_rules! warn {
     ($fmt: expr) => ({
         extern crate ansi_term;
-        println!("{}: {}", ansi_term::Colour::Red.paint("WARN"), $fmt);
+        println!("{}: {}", ansi_term::Colour::Yellow.paint("WARN"), $fmt);
     });
     ($fmt: expr, $($arg: tt)*) => ({
         extern crate ansi_term;
         let args = format!($fmt, $($arg)*);
-        println!("{}: {}", ansi_term::Colour::Red.paint("WARN"), args);
+        println!("{}: {}", ansi_term::Colour::Yellow.paint("WARN"), args);
     });
 }
 
