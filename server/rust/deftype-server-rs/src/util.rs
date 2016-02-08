@@ -7,7 +7,7 @@ use router::NoRoute;
 use serde_json as json;
 use serde_json::error::Error as JsonError;
 use serde::ser;
-
+use r2d2::GetTimeout;
 use staticfile::Static;
 use bodyparser::BodyError;
 
@@ -28,6 +28,16 @@ impl From<BodyErrorWrapper> for IronError {
                        (status::InternalServerError, "body parse error"))
     }
 }
+
+pub struct GetTimeoutWrapper(pub GetTimeout);
+
+impl From<GetTimeoutWrapper> for IronError {
+    fn from(wrapper: GetTimeoutWrapper) -> IronError {
+        IronError::new(Box::new(wrapper.0),
+                       (status::InternalServerError, "get db connection timeout"))
+    }
+}
+
 
 #[macro_export]
 macro_rules! info {

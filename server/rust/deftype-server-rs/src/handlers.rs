@@ -28,7 +28,7 @@ pub fn server_mode(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn users_list(_: &mut Request) -> IronResult<Response> {
-    let conn = models::establish_connection();
+    let conn = try!(global::conn_pool().get().map_err(GetTimeoutWrapper));
     let users = models::find_users(&conn);
     json(&users)
 }
@@ -37,7 +37,10 @@ pub fn users_create(req: &mut Request) -> IronResult<Response> {
     let parsed = req.get::<bodyparser::Struct<models::NewUser>>();
     let parsed = try!(parsed.map_err(BodyErrorWrapper));
     match parsed {
-        Some(ref new_user) => json(&models::create_user(&models::establish_connection(), new_user)),
+        Some(ref new_user) => {
+            let conn = try!(global::conn_pool().get().map_err(GetTimeoutWrapper));
+            json(&models::create_user(&conn, new_user))
+        }
         None => json(&"".to_owned()),
     }
 }
