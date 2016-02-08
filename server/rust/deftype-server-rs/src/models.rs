@@ -37,9 +37,3 @@ pub struct NewUser {
     pub login_name: String,
     pub password: String,
 }
-
-
-#[test]
-fn test_establish_connection() {
-    let _ = establish_connection();
-}

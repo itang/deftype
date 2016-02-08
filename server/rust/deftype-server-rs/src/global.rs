@@ -28,3 +28,9 @@ fn make_pool() -> r2d2::Pool<ConnectionManager<PgConnection>> {
 
     r2d2::Pool::new(config, manager).expect("Failed to create pool.")
 }
+
+#[test]
+fn test_make_pool() {
+    let pool = conn_pool();
+    assert!(pool.get().is_ok());
+}
