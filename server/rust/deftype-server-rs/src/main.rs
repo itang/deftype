@@ -1,3 +1,5 @@
+#![feature(const_fn)]
+
 #[macro_use]
 extern crate hyper;
 extern crate iron;
@@ -35,6 +37,7 @@ fn main() {
     api_router.get("/", handlers::welcome);
     api_router.get("/server/time", handlers::server_time);
     api_router.get("/server/mode", handlers::server_mode);
+    api_router.get("/users", handlers::users_list);
 
 
     let mut mount = Mount::new();

@@ -1,3 +1,4 @@
+extern crate deftype_server_rs;
 use iron::prelude::*;
 use iron::status;
 use chrono::*;
@@ -8,7 +9,9 @@ use types::*;
 use global;
 
 pub fn welcome(_: &mut Request) -> IronResult<Response> {
-    Ok(Response::with((status::Ok, "Hello from Rust!!")))
+    let msg = "Hello from Rust!";
+
+    Ok(Response::with((status::Ok, msg)))
 }
 
 pub fn server_time(_: &mut Request) -> IronResult<Response> {
@@ -20,6 +23,12 @@ pub fn server_time(_: &mut Request) -> IronResult<Response> {
 
 pub fn server_mode(_: &mut Request) -> IronResult<Response> {
     json_box(&Box::new(global::server_config().run_mode.to_str()))
+}
+
+pub fn users_list(_:&mut Request) -> IronResult<Response> {
+    let conn = deftype_server_rs::establish_connection();
+    let users = deftype_server_rs::find_users(&conn);
+    json(&users)
 }
 
 pub fn dev_mock_error(_: &mut Request) -> IronResult<Response> {

@@ -9,11 +9,47 @@ task :fmt do
 end
 
 namespace :dev do
+  desc 'prepare'
+  task :prepare do
+    sh 'sudo apt-get install postgresql-server-dev-all'
+    sh 'rm `which diesel`;cargo install diesel_cli'
+    sh 'echo DATABASE_URL=postgres://postgres:postgres@localhost/deftype_dev > .env'
+    sh 'diesel setup'
+  end
+
+  namespace :info do
+    desc 'diesel-cli'
+    task "diesel-cli" do
+      puts 'diesel migration generate create_posts_table'
+      puts 'diesel migration run'
+      puts 'diesel migration redo'
+    end
+  end
+
   namespace :mock do
     desc 'error'
     task :error do
       sh 'http ":3000/_dev/mock/error"'
     end
+  end
+end
+
+namespace :db do
+  desc 'migrate'
+  task :migrate do
+    sh 'diesel migration run'
+  end
+
+  desc 'repl'
+  task :repl do
+    # sh 'psql -h localhost -U postgres -W -d deftype_dev'
+    sh 'PGPASSWORD=postgres psql -h localhost -U postgres -d deftype_dev'
+  end
+
+  desc 'init'
+  task :init do
+    sh 'PGPASSWORD=postgres psql -h localhost -U postgres -c "drop database deftype_dev"; diesel setup'
+    sh 'rake db:migrate'
   end
 end
 
