@@ -1,4 +1,4 @@
-#![feature(const_fn, custom_derive,custom_attribute, plugin)]
+#![feature(const_fn, custom_derive, custom_attribute, plugin)]
 #![plugin(serde_macros, diesel_codegen, dotenv_macros)]
 
 #[macro_use]
@@ -11,7 +11,6 @@ extern crate iron;
 extern crate router;
 extern crate mount;
 extern crate staticfile;
-extern crate rustc_serialize;
 extern crate serde;
 extern crate serde_json;
 extern crate time;

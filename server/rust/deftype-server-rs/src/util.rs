@@ -4,19 +4,21 @@ use iron::prelude::*;
 use iron::{status, Handler};
 use iron::mime::Mime;
 use router::NoRoute;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, EncoderError};
+use serde_json as json;
+use serde_json::error::Error as JsonError;
+use serde::ser;
+
 use staticfile::Static;
 use bodyparser::BodyError;
 
-pub struct CustomEncoderError {
-    cause: EncoderError,
+pub struct CustomJsonEncodeError {
+    cause: JsonError,
 }
 
-impl From<CustomEncoderError> for IronError {
-    fn from(err: CustomEncoderError) -> IronError {
+impl From<CustomJsonEncodeError> for IronError {
+    fn from(err: CustomJsonEncodeError) -> IronError {
         IronError::new(Box::new(err.cause),
-                       (status::InternalServerError, "encode json error"))
+                       (status::InternalServerError, "json encode error"))
     }
 }
 
@@ -79,16 +81,12 @@ pub fn is_ajax_request(req: &Request) -> bool {
     req.headers.has::<XMLHttpRequest>()
 }
 
-pub fn json<T: Encodable>(value: &T) -> IronResult<Response> {
+#[inline]
+pub fn json<T>(value: &T) -> IronResult<Response>
+    where T: ser::Serialize
+{
     let content_type = "application/json; charset=utf-8".parse::<Mime>().unwrap();
-    let s = try!(json::encode(value).map_err(|err| CustomEncoderError { cause: err }));
-
-    Ok(Response::with((content_type, status::Ok, s)))
-}
-
-pub fn json_box<T: ?Sized + Encodable>(value: &Box<T>) -> IronResult<Response> {
-    let content_type = "application/json; charset=utf-8".parse::<Mime>().unwrap();
-    let s = try!(json::encode(value).map_err(|err| CustomEncoderError { cause: err }));
+    let s = try!(json::to_string(value).map_err(|err| CustomJsonEncodeError { cause: err }));
 
     Ok(Response::with((content_type, status::Ok, s)))
 }

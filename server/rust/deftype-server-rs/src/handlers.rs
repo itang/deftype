@@ -25,7 +25,7 @@ pub fn server_time(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn server_mode(_: &mut Request) -> IronResult<Response> {
-    json_box(&Box::new(global::server_config().run_mode.to_str()))
+    json(&global::server_config().run_mode.to_str())
 }
 
 pub fn users_list(_: &mut Request) -> IronResult<Response> {

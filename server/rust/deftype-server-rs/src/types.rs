@@ -1,4 +1,4 @@
-#[derive(RustcEncodable, RustcDecodable, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ServerTime {
     now: String,
 }

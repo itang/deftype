@@ -11,7 +11,7 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn create_user<'a>(conn: &PgConnection, new_user: &NewUser) -> User {
+pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
     use schema::users;
 
     diesel::insert(new_user)
@@ -20,17 +20,17 @@ pub fn create_user<'a>(conn: &PgConnection, new_user: &NewUser) -> User {
         .expect("Error saving new User")
 }
 
-pub fn find_users<'a>(conn: &PgConnection) -> Vec<User> {
+pub fn find_users(conn: &PgConnection) -> Vec<User> {
     use schema::users::dsl::*;
-    let ret: Vec<User> = users.filter(valid.eq(true))
-                              .limit(5)
-                              .load::<User>(conn)
-                              .expect("Error loading user");
-    ret
+
+    users.filter(valid.eq(true))
+         .limit(5)
+         .load::<User>(conn)
+         .expect("Error loading user")
 }
 
 
-#[derive(Queryable, RustcEncodable, RustcDecodable, Debug, Serialize, Deserialize)]
+#[derive(Queryable, Debug, Serialize, Deserialize)]
 pub struct User {
     pub id: i32,
     pub login_name: String,
