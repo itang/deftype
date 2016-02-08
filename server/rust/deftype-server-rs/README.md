@@ -18,3 +18,10 @@ cargo add staticfile
 cargo add time
 cargo add chrono
 ```
+
+tools
+
+```
+sudo apt-get install postgresql-server-dev-all
+cargo install diesel_cli
+```

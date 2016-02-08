@@ -29,7 +29,7 @@ mod types;
 
 
 fn main() {
-    let conf: &config::ServerConfig = &(*global::SERVER_CONFIG);
+    let conf = global::server_config();
 
     let mut api_router = Router::new();
     api_router.get("/", handlers::welcome);

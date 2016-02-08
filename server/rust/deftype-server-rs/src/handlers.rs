@@ -19,8 +19,7 @@ pub fn server_time(_: &mut Request) -> IronResult<Response> {
 }
 
 pub fn server_mode(_: &mut Request) -> IronResult<Response> {
-    let rm = (*global::SERVER_CONFIG).run_mode;
-    json_box(&Box::new(rm.to_str()))
+    json_box(&Box::new(global::server_config().run_mode.to_str()))
 }
 
 pub fn dev_mock_error(_: &mut Request) -> IronResult<Response> {
