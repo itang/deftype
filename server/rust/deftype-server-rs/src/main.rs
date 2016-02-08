@@ -1,4 +1,9 @@
-#![feature(const_fn)]
+#![feature(const_fn, custom_derive,custom_attribute, plugin)]
+#![plugin(serde_macros, diesel_codegen, dotenv_macros)]
+
+#[macro_use]
+extern crate diesel;
+extern crate dotenv;
 
 #[macro_use]
 extern crate hyper;
@@ -7,10 +12,14 @@ extern crate router;
 extern crate mount;
 extern crate staticfile;
 extern crate rustc_serialize;
+extern crate serde;
+extern crate serde_json;
 extern crate time;
 extern crate chrono;
 #[macro_use]
 extern crate lazy_static;
+extern crate bodyparser;
+extern crate persistent;
 
 
 use std::{io, process};
@@ -28,6 +37,8 @@ mod config;
 mod middlewares;
 mod handlers;
 mod types;
+mod models;
+mod schema;
 
 
 fn main() {
@@ -37,8 +48,9 @@ fn main() {
     api_router.get("/", handlers::welcome);
     api_router.get("/server/time", handlers::server_time);
     api_router.get("/server/mode", handlers::server_mode);
-    api_router.get("/users", handlers::users_list);
 
+    api_router.get("/users", handlers::users_list);
+    api_router.post("/users", handlers::users_create);
 
     let mut mount = Mount::new();
     mount.mount("/api", api_router);

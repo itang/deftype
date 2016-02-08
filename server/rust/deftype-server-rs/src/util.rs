@@ -7,7 +7,7 @@ use router::NoRoute;
 use rustc_serialize::Encodable;
 use rustc_serialize::json::{self, EncoderError};
 use staticfile::Static;
-
+use bodyparser::BodyError;
 
 pub struct CustomEncoderError {
     cause: EncoderError,
@@ -17,6 +17,17 @@ impl From<CustomEncoderError> for IronError {
     fn from(err: CustomEncoderError) -> IronError {
         IronError::new(Box::new(err.cause),
                        (status::InternalServerError, "encode json error"))
+    }
+}
+
+pub struct CustomBodyError {
+    pub cause: BodyError,
+}
+
+impl From<CustomBodyError> for IronError {
+    fn from(err: CustomBodyError) -> IronError {
+        IronError::new(Box::new(err.cause),
+                       (status::InternalServerError, "body parse error"))
     }
 }
 
