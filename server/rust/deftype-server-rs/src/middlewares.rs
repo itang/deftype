@@ -1,6 +1,5 @@
+use iron::{BeforeMiddleware, AfterMiddleware, typemap, status};
 use iron::prelude::*;
-use iron::{BeforeMiddleware, AfterMiddleware, typemap};
-use iron::status;
 use router::NoRoute;
 use time::precise_time_ns;
 

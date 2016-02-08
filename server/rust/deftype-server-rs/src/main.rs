@@ -10,10 +10,10 @@ extern crate chrono;
 #[macro_use]
 extern crate lazy_static;
 
-use std::io::prelude::*;
-use std::io;
-use std::path::Path;
 
+use std::{io, process};
+use std::io::prelude::*;
+use std::path::Path;
 use iron::prelude::*;
 use router::Router;
 use mount::Mount;
@@ -60,5 +60,6 @@ fn main() {
 
     if let Err(e) = Iron::new(chain).http(conf.to_addr()) {
         let _ = writeln!(io::stderr(), "Error: {}.", e);
+        process::exit(1);
     }
 }

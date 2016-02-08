@@ -1,5 +1,4 @@
-use std::fmt;
-use std::env;
+use std::{fmt, env};
 use std::str::FromStr;
 
 

@@ -1,9 +1,8 @@
 use std::fmt;
 use std::error::Error;
 use iron::prelude::*;
-use iron::status;
+use iron::{status, Handler};
 use iron::mime::Mime;
-use iron::Handler;
 use router::NoRoute;
 use rustc_serialize::Encodable;
 use rustc_serialize::json::{self, EncoderError};
