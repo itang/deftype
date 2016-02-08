@@ -11,24 +11,20 @@ use serde::ser;
 use staticfile::Static;
 use bodyparser::BodyError;
 
-pub struct CustomJsonEncodeError {
-    cause: JsonError,
-}
+pub struct JsonEncodeErrorWrapper(pub JsonError);
 
-impl From<CustomJsonEncodeError> for IronError {
-    fn from(err: CustomJsonEncodeError) -> IronError {
-        IronError::new(Box::new(err.cause),
+impl From<JsonEncodeErrorWrapper> for IronError {
+    fn from(wrapper: JsonEncodeErrorWrapper) -> IronError {
+        IronError::new(Box::new(wrapper.0),
                        (status::InternalServerError, "json encode error"))
     }
 }
 
-pub struct CustomBodyError {
-    pub cause: BodyError,
-}
+pub struct BodyErrorWrapper(pub BodyError);
 
-impl From<CustomBodyError> for IronError {
-    fn from(err: CustomBodyError) -> IronError {
-        IronError::new(Box::new(err.cause),
+impl From<BodyErrorWrapper> for IronError {
+    fn from(wrapper: BodyErrorWrapper) -> IronError {
+        IronError::new(Box::new(wrapper.0),
                        (status::InternalServerError, "body parse error"))
     }
 }
@@ -86,7 +82,7 @@ pub fn json<T>(value: &T) -> IronResult<Response>
     where T: ser::Serialize
 {
     let content_type = "application/json; charset=utf-8".parse::<Mime>().unwrap();
-    let s = try!(json::to_string(value).map_err(|err| CustomJsonEncodeError { cause: err }));
+    let s = try!(json::to_string(value).map_err(JsonEncodeErrorWrapper));
 
     Ok(Response::with((content_type, status::Ok, s)))
 }

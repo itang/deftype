@@ -1,7 +1,6 @@
 use iron::prelude::*;
 use iron::status;
 use chrono::*;
-// use persistent::Read;
 use bodyparser;
 
 use util::*;
@@ -36,7 +35,7 @@ pub fn users_list(_: &mut Request) -> IronResult<Response> {
 
 pub fn users_create(req: &mut Request) -> IronResult<Response> {
     let parsed = req.get::<bodyparser::Struct<models::NewUser>>();
-    let parsed = try!(parsed.map_err(|err| CustomBodyError { cause: err }));
+    let parsed = try!(parsed.map_err(BodyErrorWrapper));
     match parsed {
         Some(ref new_user) => json(&models::create_user(&models::establish_connection(), new_user)),
         None => json(&"".to_owned()),

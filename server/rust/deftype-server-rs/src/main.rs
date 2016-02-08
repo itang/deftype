@@ -18,7 +18,6 @@ extern crate chrono;
 #[macro_use]
 extern crate lazy_static;
 extern crate bodyparser;
-extern crate persistent;
 
 
 use std::{io, process};
