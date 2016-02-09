@@ -18,14 +18,14 @@ $(function(){
 
    function load_server_time(){
        api.server.time().done(function(ret){
-          $("#time").html("server time:" + ret.now);
+          $("#time").html("server time:" + ret.data.now);
        });
    }
 
    setInterval(load_server_time, 1000);
 
    api.server.mode().done(function(ret){
-      if(ret== "development"){
+      if(ret.data == "development"){
         $("#dev").load("/dev/1.html").show();
       }
    });

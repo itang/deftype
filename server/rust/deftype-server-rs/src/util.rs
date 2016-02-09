@@ -11,6 +11,9 @@ use r2d2::GetTimeout;
 use staticfile::Static;
 use bodyparser::BodyError;
 
+use types::ResultDTO;
+
+
 pub struct JsonEncodeErrorWrapper(pub JsonError);
 
 impl From<JsonEncodeErrorWrapper> for IronError {
@@ -95,6 +98,22 @@ pub fn json<T>(value: &T) -> IronResult<Response>
     let s = try!(json::to_string(value).map_err(JsonEncodeErrorWrapper));
 
     Ok(Response::with((content_type, status::Ok, s)))
+}
+
+#[inline]
+pub fn json_result<T>(value: ResultDTO<T>) -> IronResult<Response>
+    where T: ser::Serialize
+{
+    let content_type = "application/json; charset=utf-8".parse::<Mime>().unwrap();
+    let s = try!(json::to_string(&value).map_err(JsonEncodeErrorWrapper));
+
+    Ok(Response::with((content_type, status::Ok, s)))
+}
+
+impl<T: ser::Serialize> ResultDTO<T> {
+    pub fn to_json_result(&self) -> IronResult<Response> {
+        json(self)
+    }
 }
 
 pub struct MyStatic(pub Static);

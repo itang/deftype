@@ -4,8 +4,8 @@ end
 
 desc 'fmt'
 task :fmt do
-  sh 'cargo fmt --write-mode=overwrite'
-  #sh 'rm src/*.bk'
+  sh 'cargo fmt -- --write-mode=overwrite'
+  # sh 'rm src/*.bk'
 end
 
 namespace :dev do
@@ -19,7 +19,7 @@ namespace :dev do
 
   namespace :info do
     desc 'diesel-cli'
-    task "diesel-cli" do
+    task 'diesel-cli' do
       puts 'diesel migration generate create_posts_table'
       puts 'diesel migration run'
       puts 'diesel migration redo'
