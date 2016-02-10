@@ -1,5 +1,5 @@
 use std::fmt;
-use std::error::Error;
+use std::error::Error as StdError;
 use iron::prelude::*;
 use iron::{status, Handler};
 use iron::mime::Mime;
@@ -10,15 +10,25 @@ use serde::ser;
 use r2d2::GetTimeout;
 use staticfile::Static;
 use bodyparser::BodyError;
+use diesel::prelude::*;
 
 use types::ResultDTO;
 
+
+// pub struct TransactionErrorWrapper<E>(pub TransactionError<E>);
+//
+// impl<E: StdError + Send> From<TransactionErrorWrapper<E>> for IronError {
+//     fn from(wrapper: TransactionErrorWrapper<E>) -> IronError {
+//         IronError::new(wrapper.0,
+//                        (status::InternalServerError, "database transaction error"))
+//     }
+// }
 
 pub struct JsonEncodeErrorWrapper(pub JsonError);
 
 impl From<JsonEncodeErrorWrapper> for IronError {
     fn from(wrapper: JsonEncodeErrorWrapper) -> IronError {
-        IronError::new(Box::new(wrapper.0),
+        IronError::new(wrapper.0,
                        (status::InternalServerError, "json encode error"))
     }
 }
@@ -27,8 +37,7 @@ pub struct BodyErrorWrapper(pub BodyError);
 
 impl From<BodyErrorWrapper> for IronError {
     fn from(wrapper: BodyErrorWrapper) -> IronError {
-        IronError::new(Box::new(wrapper.0),
-                       (status::InternalServerError, "body parse error"))
+        IronError::new(wrapper.0, (status::InternalServerError, "body parse error"))
     }
 }
 
@@ -36,7 +45,7 @@ pub struct GetTimeoutWrapper(pub GetTimeout);
 
 impl From<GetTimeoutWrapper> for IronError {
     fn from(wrapper: GetTimeoutWrapper) -> IronError {
-        IronError::new(Box::new(wrapper.0),
+        IronError::new(wrapper.0,
                        (status::InternalServerError, "get db connection timeout"))
     }
 }
@@ -141,7 +150,7 @@ impl fmt::Display for MockError {
     }
 }
 
-impl Error for MockError {
+impl StdError for MockError {
     fn description(&self) -> &str {
         "Mock Error"
     }

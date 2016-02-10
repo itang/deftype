@@ -4,8 +4,8 @@ end
 
 desc 'fmt'
 task :fmt do
-  sh 'cargo fmt -- --write-mode=overwrite'
-  # sh 'rm src/*.bk'
+  sh 'cargo fmt'
+  sh 'rm src/*.bk'
 end
 
 namespace :dev do
