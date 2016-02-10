@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [dependencies]
 ansi_term = "0.7.1"
+bcrypt = "0.1.0"
 chrono = "0.2.19"
 clippy = "0.0.37"
 diesel = "0.5.0"

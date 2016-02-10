@@ -19,6 +19,7 @@ extern crate chrono;
 #[macro_use]
 extern crate lazy_static;
 extern crate bodyparser;
+extern crate bcrypt;
 
 use std::{io, process};
 use std::io::prelude::*;

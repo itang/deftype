@@ -11,6 +11,7 @@ use r2d2::GetTimeout;
 use staticfile::Static;
 use bodyparser::BodyError;
 use diesel::prelude::*;
+use bcrypt;
 
 use types::ResultDTO;
 
@@ -88,6 +89,12 @@ macro_rules! error {
         let args = format!($fmt, $($arg)*);
         println!("{}: {}", ansi_term::Colour::Red.paint("ERROR"), args);
     });
+}
+
+pub type BcryptResult = Result<String, String>;
+
+pub fn bcrypt_hash(value: &str) -> BcryptResult {
+    bcrypt::hash(value, bcrypt::DEFAULT_COST).map_err(|e| format!("{:?}", e))
 }
 
 header! { (XMLHttpRequest, "X-Requested-With") => [String] }
