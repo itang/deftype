@@ -3,8 +3,13 @@ use iron::prelude::*;
 use router::NoRoute;
 use time::precise_time_ns;
 
-use util::*;
+use hyper::header;
+use hyper::header::{Authorization, Bearer};
+use crypto::sha2::Sha256;
+use jwt::{Header, Registered, Token};
 
+use util::*;
+use models;
 
 pub struct Runtime;
 
@@ -46,5 +51,41 @@ impl AfterMiddleware for ErrorsHandler {
             // TODO: custom 500 page.
             Ok(Response::with((status::InternalServerError, "500")))
         }
+    }
+}
+
+
+pub struct JwtFilter;
+
+impl BeforeMiddleware for JwtFilter {
+    fn before(&self, req: &mut Request) -> IronResult<()> {
+        let uri = &req.url.path.join("/");
+        if uri.starts_with("api/") && !uri.starts_with("api/users/login") {
+            // Get the full Authorization header from the incoming request headers
+            let auth_header = match req.headers.get::<Authorization<Bearer>>() {
+                Some(header) => header,
+                None => panic!("No authorization header found"),
+            };
+
+            // Format the header to only take the value
+            let jwt = header::HeaderFormatter(auth_header).to_string();
+
+            // We don't need the Bearer part,
+            // so get whatever is after an index of 7
+            let jwt_slice = &jwt[7..];
+
+            // Parse the token
+            let token = Token::<Header, Registered>::parse(jwt_slice).unwrap();
+
+            // Get the secret key as bytes
+            let secret = models::AUTH_SECRET.as_bytes();
+            // Verify the token
+            if !token.verify(&secret, Sha256::new()) {
+                return Err(IronError::new(StringError("授权不通过!".to_string()),
+                                          (status::Forbidden, "授权不通过!")));
+            }
+        }
+
+        Ok(())
     }
 }

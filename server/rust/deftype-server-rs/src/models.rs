@@ -1,8 +1,14 @@
 use diesel;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
+
+use std::default::Default;
+use crypto::sha2::Sha256;
+use jwt::{Header, Registered, Token};
+
 use util::*;
 
+pub const AUTH_SECRET: &'static str = "uLkvkYvgiA01ozKoTvyyXL_YBZUxDQK0OGosXmdBg84=";
 
 pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
     use schema::users;
@@ -30,8 +36,38 @@ pub fn find_users(conn: &PgConnection) -> Vec<User> {
          .expect("Error loading user")
 }
 
+pub fn login(conn: &PgConnection, login_form: &LoginForm) -> Option<LoginResponse> {
+    use schema::users::dsl::*;
+    let ret = users.filter(login_name.eq(&login_form.login_name))
+                   .limit(1)
+                   .load::<User>(conn)
+                   .expect("Error loading user");
+    match ret.first() {
+        Some(user) => {
+            if bcrypt_verify(&login_form.password, &user.password) {
+                let header: Header = Default::default();
+                // For the example, we just have one claim
+                // You would also want iss, exp, iat etc
+                let claims = Registered {
+                    sub: Some(user.login_name.clone()),
+                    ..Default::default()
+                };
+                let token = Token::new(header, claims);
+                // Sign the token
+                let jwt = token.signed(AUTH_SECRET.as_bytes(), Sha256::new()).unwrap();
+                let token_str = format!("{}", jwt);
 
-#[derive(Queryable, Debug, Serialize)]
+                Some(LoginResponse::new(user.clone(), token_str))
+            } else {
+                None
+            }
+        }
+        None => None,
+    }
+}
+
+
+#[derive(Queryable, Debug, Serialize, Clone)]
 pub struct User {
     pub id: i32,
     pub login_name: String,
@@ -47,6 +83,27 @@ use super::schema::users;
 pub struct NewUser {
     pub login_name: String,
     pub password: String,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct LoginForm {
+    pub login_name: String,
+    pub password: String,
+}
+
+#[derive(Debug, Serialize, Clone)]
+pub struct LoginResponse {
+    pub user: User,
+    pub token: String,
+}
+
+impl LoginResponse {
+    pub fn new(user: User, token: String) -> Self {
+        LoginResponse {
+            user: user,
+            token: token,
+        }
+    }
 }
 
 type ValidResult<T> = Result<T, String>;

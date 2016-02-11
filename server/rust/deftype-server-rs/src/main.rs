@@ -20,6 +20,9 @@ extern crate chrono;
 extern crate lazy_static;
 extern crate bodyparser;
 extern crate bcrypt;
+extern crate jwt;
+extern crate crypto;
+
 
 use std::{io, process};
 use std::io::prelude::*;
@@ -50,6 +53,7 @@ fn main() {
 
     api_router.get("/users", handlers::users_list);
     api_router.post("/users", handlers::users_create);
+    api_router.post("/users/login", handlers::users_login);
 
     let mut mount = Mount::new();
     mount.mount("/api", api_router);
@@ -64,6 +68,7 @@ fn main() {
 
     let mut chain = Chain::new(mount);
     chain.link_before(middlewares::Runtime);
+    chain.link_before(middlewares::JwtFilter);
     chain.link_after(middlewares::ErrorsHandler);
     chain.link_after(middlewares::Runtime);
 

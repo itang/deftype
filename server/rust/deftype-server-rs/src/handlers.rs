@@ -46,6 +46,21 @@ pub fn users_create(req: &mut Request) -> IronResult<Response> {
     }
 }
 
+pub fn users_login(req: &mut Request) -> IronResult<Response> {
+    let parsed = req.get::<bodyparser::Struct<models::LoginForm>>();
+    let parsed = try!(parsed.map_err(BodyErrorWrapper));
+    match parsed {
+        Some(ref login_form) => {
+            let conn = try!(global::conn_pool().get().map_err(GetTimeoutWrapper));
+            match models::login(&conn, login_form) {
+                Some(user) => ResultDTO::ok(&user).json_result(),
+                None => ResultDTO::err("用户不存在或者密码输入有误").json_result(),
+            }
+        }
+        None => ResultDTO::err("").json_result(),
+    }
+}
+
 pub fn dev_mock_error(_: &mut Request) -> IronResult<Response> {
     Err(IronError::new(MockError, status::InternalServerError))
 }

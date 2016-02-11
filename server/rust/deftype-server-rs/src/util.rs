@@ -25,6 +25,21 @@ use types::ResultDTO;
 //     }
 // }
 
+#[derive(Debug)]
+pub struct StringError(pub String);
+
+impl fmt::Display for StringError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
+    }
+}
+
+impl StdError for StringError {
+    fn description(&self) -> &str {
+        &*self.0
+    }
+}
+
 pub struct JsonEncodeErrorWrapper(pub JsonError);
 
 impl From<JsonEncodeErrorWrapper> for IronError {
@@ -95,6 +110,13 @@ pub type BcryptResult = Result<String, String>;
 
 pub fn bcrypt_hash(value: &str) -> BcryptResult {
     bcrypt::hash(value, bcrypt::DEFAULT_COST).map_err(|e| format!("{:?}", e))
+}
+
+pub fn bcrypt_verify(value: &str, hashed: &str) -> bool {
+    match bcrypt::verify(value, hashed) {
+        Ok(valid) => valid,
+        Err(_) => false,
+    }
 }
 
 header! { (XMLHttpRequest, "X-Requested-With") => [String] }

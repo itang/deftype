@@ -77,10 +77,10 @@ end
 namespace :run do
   desc 'dev'
   task :dev do
-    fork do
-      sleep(2)
-      sh 'xdg-open http://localhost:3000 > /dev/null'
-    end
+    # fork do
+    #   sleep(2)
+    #   sh 'xdg-open http://localhost:3000 > /dev/null'
+    # end
     sh 'cargo run --bin deftype-server-rs'
   end
   task :prod do
