@@ -20,17 +20,18 @@ pub fn server_time(_: &mut Request) -> IronResult<Response> {
     let dt = Local::now();
     let server_time = ServerTime::new(dt.format("%Y-%m-%d %H:%M:%S").to_string());
 
-    ResultDTO::ok(server_time).to_json_result()
+    ResultDTO::ok(server_time).json_result()
 }
 
 pub fn server_mode(_: &mut Request) -> IronResult<Response> {
-    json(&ResultDTO::ok(&global::server_config().run_mode.to_str()))
+    ResultDTO::ok(&global::server_config().run_mode.to_str()).json_result()
 }
 
 pub fn users_list(_: &mut Request) -> IronResult<Response> {
     let conn = try!(global::conn_pool().get().map_err(GetTimeoutWrapper));
     let users = models::find_users(&conn);
-    json_result(ResultDTO::ok(users).code(200).message("获取用户成功!"))
+
+    ResultDTO::ok(users).code(200).message("获取用户成功!").json_result()
 }
 
 pub fn users_create(req: &mut Request) -> IronResult<Response> {
@@ -39,9 +40,9 @@ pub fn users_create(req: &mut Request) -> IronResult<Response> {
     match parsed {
         Some(ref new_user) => {
             let conn = try!(global::conn_pool().get().map_err(GetTimeoutWrapper));
-            ResultDTO::ok(models::create_user(&conn, new_user)).to_json_result()
+            ResultDTO::ok(models::create_user(&conn, new_user)).json_result()
         }
-        None => ResultDTO::err(&"".to_owned()).to_json_result(),
+        None => ResultDTO::err("").json_result(),
     }
 }
 
