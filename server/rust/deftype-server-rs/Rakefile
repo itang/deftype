@@ -5,8 +5,7 @@ end
 desc 'fmt'
 task :fmt do
   sh 'cargo fmt'
-  sh 'rm src/*.bk'
-  sh 'rm src/bin/*.bk'
+  sh 'find . -type f -name "*.rs.bk"|xargs rm -rf'
 end
 
 namespace :dev do
