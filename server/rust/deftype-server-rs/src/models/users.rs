@@ -116,7 +116,8 @@ impl Cleaning for NewUser {
 }
 
 impl Valid<NewUser> for NewUser {
-    fn validate(self) -> ValidResult<NewUser> {
+    fn validate(&self) -> ValidResult<NewUser> {
+
         if self.login_name.len() < 2 {
             return Err("login_name min-length: 2".to_owned());
         }
@@ -124,6 +125,6 @@ impl Valid<NewUser> for NewUser {
             return Err("password min-length: 6".to_owned());
         }
 
-        Ok(self)
+        Ok(self.clone())
     }
 }
