@@ -50,3 +50,14 @@ impl<T: ser::Serialize> ResultDTO<T> {
         self
     }
 }
+
+
+pub type ValidResult<T> = Result<T, String>;
+
+pub trait Valid<T> {
+    fn validate(self) -> ValidResult<T>;
+}
+
+pub trait Cleaning {
+    fn cleaning(&self) -> Self;
+}

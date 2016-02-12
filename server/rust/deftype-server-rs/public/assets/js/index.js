@@ -26,6 +26,9 @@ var api =
                         password: password
                     };
                     return json_post("/api/users/login", login_form);
+                },
+                list: function() {
+                    return $.getJSON("/api/users");
                 }
             }
         };
@@ -59,6 +62,12 @@ $(function() {
                 if (ret.data == "development") {
                     $("#dev").load("/dev/1.html").show();
                 }
+            });
+            $("#btn-users-list").click(function() {
+                api.users.list().done(function(ret) {
+                    $("#div-users").html(JSON.stringify(ret));
+                });
+                return false;
             });
         } else {
             //

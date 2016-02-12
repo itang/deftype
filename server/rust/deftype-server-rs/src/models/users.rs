@@ -7,8 +7,8 @@ use crypto::sha2::Sha256;
 use jwt::{Header, Registered, Token};
 
 use util::*;
+use types::*;
 
-pub const AUTH_SECRET: &'static str = "uLkvkYvgiA01ozKoTvyyXL_YBZUxDQK0OGosXmdBg84=";
 
 pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
     use schema::users;
@@ -54,7 +54,7 @@ pub fn login(conn: &PgConnection, login_form: &LoginForm) -> Option<LoginRespons
                 };
                 let token = Token::new(header, claims);
                 // Sign the token
-                let jwt = token.signed(AUTH_SECRET.as_bytes(), Sha256::new()).unwrap();
+                let jwt = token.signed(super::AUTH_SECRET.as_bytes(), Sha256::new()).unwrap();
                 let token_str = format!("{}", jwt);
 
                 Some(LoginResponse::new(user.clone(), token_str))
@@ -76,7 +76,7 @@ pub struct User {
     pub valid: bool,
 }
 
-use super::schema::users;
+use schema::users;
 
 #[insertable_into(users)]
 #[derive(Debug, Deserialize, Clone)]
@@ -104,16 +104,6 @@ impl LoginResponse {
             token: token,
         }
     }
-}
-
-type ValidResult<T> = Result<T, String>;
-
-trait Valid<T> {
-    fn validate(self) -> ValidResult<T>;
-}
-
-trait  Cleaning{
-    fn cleaning(&self) -> Self;
 }
 
 impl Cleaning for NewUser {
