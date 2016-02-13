@@ -31,6 +31,7 @@ fn make_pool() -> r2d2::Pool<ConnectionManager<PgConnection>> {
 
 #[test]
 fn test_make_pool() {
+    println!("测试获取数据库连接...");
     let pool = conn_pool();
     assert!(pool.get().is_ok());
 }

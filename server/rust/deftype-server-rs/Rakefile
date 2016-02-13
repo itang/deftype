@@ -8,6 +8,11 @@ task :fmt do
   sh 'find . -type f -name "*.rs.bk"|xargs rm -rf'
 end
 
+desc 'test'
+task :test do
+  sh 'cargo test -- --nocapture'
+end
+
 namespace :dev do
   desc 'prepare'
   task :prepare do
