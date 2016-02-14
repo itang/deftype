@@ -17,7 +17,7 @@ namespace :dev do
   desc 'prepare'
   task :prepare do
     sh 'sudo apt-get install postgresql-server-dev-all'
-    sh 'rm `which diesel`;cargo install diesel_cli'
+    sh 'rm `which diesel`;cd /tmp;cargo install diesel_cli --no-default-features --features postgres'
     sh 'echo DATABASE_URL=postgres://postgres:postgres@localhost/deftype_dev > .env'
     sh 'diesel setup'
   end
