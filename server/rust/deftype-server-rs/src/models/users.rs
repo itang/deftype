@@ -8,6 +8,7 @@ use jwt::{Header, Registered, Token};
 
 use util::*;
 use types::*;
+use global::*;
 
 
 pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
@@ -54,7 +55,8 @@ pub fn login(conn: &PgConnection, login_form: &LoginForm) -> Option<LoginRespons
                 };
                 let token = Token::new(header, claims);
                 // Sign the token
-                let jwt = token.signed(super::AUTH_SECRET.as_bytes(), Sha256::new()).unwrap();
+                let jwt = token.signed(server_config().auth_secret.as_bytes(), Sha256::new())
+                               .unwrap();
                 let token_str = format!("{}", jwt);
 
                 Some(LoginResponse::new(user.clone(), token_str))

@@ -9,7 +9,8 @@ use crypto::sha2::Sha256;
 use jwt::{Header, Registered, Token};
 
 use util::*;
-use models;
+use global::*;
+
 
 pub struct Runtime;
 
@@ -78,7 +79,7 @@ impl BeforeMiddleware for JwtFilter {
             let token = Token::<Header, Registered>::parse(jwt_slice).unwrap();
 
             // Get the secret key as bytes
-            let secret = models::AUTH_SECRET.as_bytes();
+            let secret = server_config().auth_secret.as_bytes();
             // Verify the token
             if !token.verify(&secret, Sha256::new()) {
                 return Err(IronError::new(StringError("授权不通过!".to_string()),

@@ -50,19 +50,26 @@ impl FromStr for RunMode {
 
 #[derive(Debug, PartialEq)]
 pub struct ServerConfig {
+    pub run_mode: RunMode,
     pub host: String,
     pub port: u16,
     pub root_dir: String,
-    pub run_mode: RunMode,
+    pub auth_secret: String,
 }
 
 impl ServerConfig {
-    fn new(host: String, port: u16, root_dir: String, run_mode: RunMode) -> Self {
+    fn new(run_mode: RunMode,
+           host: String,
+           port: u16,
+           root_dir: String,
+           auth_secret: String)
+           -> Self {
         ServerConfig {
+            run_mode: run_mode,
             host: host,
             port: port,
             root_dir: root_dir,
-            run_mode: run_mode,
+            auth_secret: auth_secret,
         }
     }
 
@@ -72,13 +79,14 @@ impl ServerConfig {
         let default_run_mode = d.run_mode;
         let host = env::var("HOST").unwrap_or(d.host);
         let root_dir = env::var("ROOT_DIR").unwrap_or(d.root_dir);
+        let auth_secret = env::var("AUTH_SECRET").unwrap_or(d.auth_secret);
         let port = env::var("PORT")
                        .map(|p| p.parse::<u16>().unwrap_or(default_port))
                        .unwrap_or(default_port);
         let run_mode = env::var("RUN_MODE")
                            .map(|m| m.parse::<RunMode>().unwrap_or(default_run_mode))
                            .unwrap_or(default_run_mode);
-        Self::new(host, port, root_dir, run_mode)
+        Self::new(run_mode, host, port, root_dir, auth_secret)
     }
 
     pub fn to_addr(&self) -> (&str, u16) {
@@ -88,20 +96,23 @@ impl ServerConfig {
 
 impl Default for ServerConfig {
     fn default() -> Self {
-        Self::new("localhost".to_owned(),
+        Self::new(RunMode::Development,
+                  "localhost".to_owned(),
                   3000,
                   "public/".to_owned(),
-                  RunMode::Development)
+                  "uLkvkYvgiA01ozKoTvyyXL_YBZUxDQK0OGosXmdBg84=".to_owned())
     }
 }
 
 impl fmt::Display for ServerConfig {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f,
-               "ServerConfig(host:{} , port: {}, root_dir:{}, run_mode: {})",
+               "ServerConfig(run_mode: {}, host:{} , port: {}, root_dir:{}, auth_secret:{})",
+        self.run_mode,
                self.host,
                self.port,
                self.root_dir,
-               self.run_mode)
+        self.auth_secret,
+               )
     }
 }
