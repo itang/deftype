@@ -13,6 +13,13 @@ task :test do
   sh 'cargo test -- --nocapture'
 end
 
+namespace :deps do
+  desc 'outdated'
+  task :outdated do
+    sh 'cargo outdated'
+  end
+end
+
 namespace :dev do
   desc 'prepare'
   task :prepare do
