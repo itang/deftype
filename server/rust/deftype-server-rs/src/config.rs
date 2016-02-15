@@ -97,7 +97,7 @@ impl ServerConfig {
 impl Default for ServerConfig {
     fn default() -> Self {
         Self::new(RunMode::Development,
-                  "localhost".to_owned(),
+                  "0.0.0.0".to_owned(),
                   3000,
                   "public/".to_owned(),
                   "uLkvkYvgiA01ozKoTvyyXL_YBZUxDQK0OGosXmdBg84=".to_owned())
@@ -108,11 +108,10 @@ impl fmt::Display for ServerConfig {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f,
                "ServerConfig(run_mode: {}, host:{} , port: {}, root_dir:{}, auth_secret:{})",
-        self.run_mode,
+               self.run_mode,
                self.host,
                self.port,
                self.root_dir,
-        self.auth_secret,
-               )
+               self.auth_secret)
     }
 }
