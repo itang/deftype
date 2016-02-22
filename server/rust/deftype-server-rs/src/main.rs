@@ -31,6 +31,7 @@ use iron::prelude::*;
 use router::Router;
 use mount::Mount;
 use staticfile::Static;
+use dotenv::dotenv;
 
 
 mod global;
@@ -44,6 +45,8 @@ mod schema;
 
 
 fn main() {
+    dotenv().ok();
+
     let conf = global::server_config();
 
     let mut api_router = Router::new();

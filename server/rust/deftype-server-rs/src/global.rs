@@ -1,7 +1,6 @@
 use std::env;
 use r2d2;
 use r2d2_diesel::ConnectionManager;
-use dotenv::dotenv;
 use diesel::pg::PgConnection;
 
 use config::ServerConfig;
@@ -20,8 +19,6 @@ pub fn conn_pool<'a>() -> &'a r2d2::Pool<ConnectionManager<PgConnection>> {
 }
 
 fn make_pool() -> r2d2::Pool<ConnectionManager<PgConnection>> {
-    dotenv().ok();
-
     let config = r2d2::Config::default();
     let manager = ConnectionManager::<PgConnection>::new(env::var("DATABASE_URL")
                                                              .expect("DATABASE_URL must be set"));
