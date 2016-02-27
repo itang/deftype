@@ -81,7 +81,7 @@ impl BeforeMiddleware for JwtFilter {
             // Get the secret key as bytes
             let secret = server_config().auth_secret.as_bytes();
             // Verify the token
-            if !token.verify(&secret, Sha256::new()) {
+            if !token.verify(secret, Sha256::new()) {
                 return Err(IronError::new(StringError("授权不通过!".to_string()),
                                           (status::Forbidden, "授权不通过!")));
             }
