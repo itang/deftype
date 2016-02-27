@@ -16,6 +16,7 @@ use bcrypt;
 use types::ResultDTO;
 
 
+const MY_BCRYPT_COST_DEFAULT: u32 = 4;
 // pub struct TransactionErrorWrapper<E>(pub TransactionError<E>);
 //
 // impl<E: StdError + Send> From<TransactionErrorWrapper<E>> for IronError {
@@ -109,7 +110,7 @@ macro_rules! error {
 pub type BcryptResult = Result<String, String>;
 
 pub fn bcrypt_hash(value: &str) -> BcryptResult {
-    bcrypt::hash(value, bcrypt::DEFAULT_COST).map_err(|e| format!("{:?}", e))
+    bcrypt::hash(value, MY_BCRYPT_COST_DEFAULT).map_err(|e| format!("{:?}", e))
 }
 
 pub fn bcrypt_verify(value: &str, hashed: &str) -> bool {

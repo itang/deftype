@@ -80,7 +80,7 @@ end
 namespace :source do
   desc 'check'
   task :check do
-    sh 'cargo clippy --bin deftype-server-rs'
+    sh 'cargo clippy --bin server'
     sh 'cargo clippy --bin bcrypt'
   end
 end
@@ -92,10 +92,10 @@ namespace :run do
     #   sleep(2)
     #   sh 'xdg-open http://localhost:3000 > /dev/null'
     # end
-    sh 'RUST_BACKTRACE=1 cargo run --bin deftype-server-rs'
+    sh 'RUST_BACKTRACE=1 cargo run --bin server'
   end
   task :prod do
-    sh 'RUN_MODE=production cargo run --release --bin deftype-server-rs'
+    sh 'RUN_MODE=production cargo run --release --bin server'
   end
 end
 
