@@ -1,12 +1,7 @@
-extern crate bcrypt;
 #[macro_use]
 extern crate deftype_server_rs;
 
 use std::env;
-
-#[allow(unused_imports)]
-use bcrypt::{DEFAULT_COST, hash, verify};
-
 use deftype_server_rs::util;
 
 
