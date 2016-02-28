@@ -90,20 +90,20 @@ var index = (function() {
                     $("#dev").load("/dev/1.html").show();
                 }
             });
-            $("#btn-users-list").click(function() {
-                api.users.list().done(function(ret) {
-                    $("#div-users").html(JSON.stringify(ret));
-                });
-                return false;
-            });
         } else {
             $login.html("<a href='/login.html'>登录</a>")
         }
 
-        $("body button#btn-logout").on("click", function() {
+        $("body").on("click", "button#btn-logout", function() {
             console.log("logout");
             app.logout();
             window.location.href = "/index.html";
+        });
+
+        $("body").on("click", "a#btn-users-list", function() {
+            api.users.list().done(function(ret) {
+                $("#div-users").html(JSON.stringify(ret));
+            });
         });
     }
 
