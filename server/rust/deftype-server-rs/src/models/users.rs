@@ -69,7 +69,7 @@ pub fn login(conn: &PgConnection, login_form: &LoginForm) -> Option<LoginRespons
 }
 
 
-#[derive(Queryable, Debug, Serialize, Clone)]
+#[derive(Debug, Clone, Serialize, Queryable)]
 pub struct User {
     pub id: i32,
     pub login_name: String,
@@ -81,19 +81,19 @@ pub struct User {
 use schema::users;
 
 #[insertable_into(users)]
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct NewUser {
     pub login_name: String,
     pub password: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct LoginForm {
     pub login_name: String,
     pub password: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct LoginResponse {
     pub user: User,
     pub token: String,

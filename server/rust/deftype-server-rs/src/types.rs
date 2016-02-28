@@ -1,6 +1,6 @@
 use serde::ser;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Debug)]
 pub struct ServerTime {
     now: String,
 }

@@ -87,7 +87,7 @@ var index = (function() {
 
             api.server.mode().done(function(ret) {
                 if (ret.data == "development") {
-                    $("#dev").load("/dev/1.html").show();
+                    $("#dev").load("/dev/1.html").css('visibility', 'visible');
                 }
             });
         } else {
@@ -97,7 +97,7 @@ var index = (function() {
         $("body").on("click", "button#btn-logout", function() {
             console.log("logout");
             app.logout();
-            window.location.href = "/index.html";
+            window.location.href = "/";
         });
 
         $("body").on("click", "a#btn-users-list", function() {
@@ -122,7 +122,7 @@ var login = (function() {
                 console.log(JSON.stringify(ret));
                 if (ret.ok) {
                     app.setToken(ret.data.token);
-                    window.location.href = "/index.html";
+                    window.location.href = "/";
                 } else {
                     alert("登录失败!");
                 }
