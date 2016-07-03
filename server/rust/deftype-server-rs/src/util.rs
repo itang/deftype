@@ -10,7 +10,6 @@ use serde::ser;
 use r2d2::GetTimeout;
 use staticfile::Static;
 use bodyparser::BodyError;
-use diesel::prelude::*;
 use bcrypt;
 
 use types::ResultDTO;
