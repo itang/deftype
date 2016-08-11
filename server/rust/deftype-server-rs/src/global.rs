@@ -7,7 +7,7 @@ use config::ServerConfig;
 
 lazy_static! {
     pub static ref SERVER_CONFIG: ServerConfig = ServerConfig::load_from_env();
-    pub static ref POOL: r2d2::Pool<ConnectionManager<PgConnection>> = make_pool();
+    static ref POOL: r2d2::Pool<ConnectionManager<PgConnection>> = make_pool();
 }
 
 pub fn server_config<'a>() -> &'a ServerConfig {

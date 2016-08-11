@@ -60,7 +60,7 @@ pub struct JwtFilter;
 
 impl BeforeMiddleware for JwtFilter {
     fn before(&self, req: &mut Request) -> IronResult<()> {
-        let uri = &req.url.path.join("/");
+        let uri = &req.url.path().join("/");
         if uri.starts_with("api/") && !uri.starts_with("api/users/login") {
             // Get the full Authorization header from the incoming request headers
             let auth_header = match req.headers.get::<Authorization<Bearer>>() {
