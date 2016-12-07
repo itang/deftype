@@ -15,8 +15,9 @@ def postgres_pull():
 
 
 def postgres_start():
-    local('docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres')
+    local('docker-compose up')
 
 
 def postgres_client():
-    local('docker run -it --rm --link some-postgres:postgres postgres psql -h postgres -U postgres')
+    #local('docker run -it --rm --link deftypeserverrs_postgres_1:postgres postgres psql -h postgres -U postgres')
+    local('docker exec -it deftypeserverrs_postgres_1 psql -U postgres')

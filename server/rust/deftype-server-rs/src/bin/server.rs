@@ -1,6 +1,3 @@
-#![feature(const_fn, custom_derive, custom_attribute, plugin)]
-#![plugin(dotenv_macros)]
-
 extern crate dotenv;
 extern crate iron;
 extern crate router;

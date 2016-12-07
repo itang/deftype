@@ -1,5 +1,4 @@
-#![feature(const_fn, custom_derive, custom_attribute, plugin)]
-#![plugin(serde_macros, diesel_codegen, dotenv_macros)]
+#![feature(proc_macro)]
 
 #[macro_use]
 extern crate diesel;
@@ -13,6 +12,8 @@ extern crate router;
 extern crate mount;
 extern crate staticfile;
 extern crate serde;
+#[macro_use]
+extern crate serde_derive;
 extern crate serde_json;
 extern crate time;
 extern crate chrono;
@@ -26,7 +27,8 @@ extern crate crypto;
 
 pub mod global;
 pub mod config;
-#[macro_use]pub mod util;
+#[macro_use]
+pub mod util;
 pub mod middlewares;
 pub mod handlers;
 pub mod types;
