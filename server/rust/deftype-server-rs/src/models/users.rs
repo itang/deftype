@@ -32,31 +32,29 @@ pub fn find_users(conn: &PgConnection) -> Vec<User> {
     use schema::users::dsl::*;
 
     users.filter(valid.eq(true))
-         .limit(5)
-         .load::<User>(conn)
-         .expect("Error loading user")
+        .limit(5)
+        .load::<User>(conn)
+        .expect("Error loading user")
 }
 
 pub fn login(conn: &PgConnection, login_form: &LoginForm) -> Option<LoginResponse> {
     use schema::users::dsl::*;
     let ret = users.filter(login_name.eq(&login_form.login_name))
-                   .limit(1)
-                   .load::<User>(conn)
-                   .expect("Error loading user");
+        .limit(1)
+        .load::<User>(conn)
+        .expect("Error loading user");
     match ret.first() {
         Some(user) => {
             if bcrypt_verify(&login_form.password, &user.password) {
                 let header: Header = Default::default();
                 // For the example, we just have one claim
                 // You would also want iss, exp, iat etc
-                let claims = Registered {
-                    sub: Some(user.login_name.clone()),
-                    ..Default::default()
-                };
+                let claims =
+                    Registered { sub: Some(user.login_name.clone()), ..Default::default() };
                 let token = Token::new(header, claims);
                 // Sign the token
                 let jwt = token.signed(server_config().auth_secret.as_bytes(), Sha256::new())
-                               .unwrap();
+                    .unwrap();
                 let token_str = format!("{}", jwt);
 
                 Some(LoginResponse::new(user.clone(), token_str))
@@ -80,7 +78,8 @@ pub struct User {
 
 use schema::users;
 
-#[insertable_into(users)]
+#[derive(Insertable)]
+#[table_name="users"]
 #[derive(Debug, Clone, Deserialize)]
 pub struct NewUser {
     pub login_name: String,
